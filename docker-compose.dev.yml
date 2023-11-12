@@ -1,0 +1,44 @@
+version: '3.0'
+
+services:
+  checker-db:
+    container_name: checker-db
+    image: postgres:13.0-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - .env
+    ports:
+      - "5432:5432"
+
+  web:
+    container_name: web
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./:/usr/src/app
+      - ../uploads:/usr/src/uploads
+      - /usr/src/app/node_modules
+    ports:
+      - "3000:3000"
+    depends_on:
+      - checker-db
+
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    container_name: nest-pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=pgadmin4
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    ports:
+      - '5050:80'
+    depends_on:
+      - checker-db
+
+volumes:
+  postgres_data:
+  pgadmin:

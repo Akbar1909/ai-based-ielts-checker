@@ -1,0 +1,98 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User{
+  userId Int @id @default(autoincrement())
+  testGroups TestGroup[]
+  attempts Attempt[]
+  tags TestTag[]
+  email  String @unique @db.VarChar(50)
+  username String @unique @db.VarChar(50)
+  password String 
+  role UserRole @default(student)
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+}
+
+model TestGroup{
+  testGroupId Int @id @default(autoincrement())
+  author User @relation(fields: [authorId],references: [userId])
+  authorId Int
+  tests Test[]
+  title String @db.VarChar(200)
+  description String @db.VarChar(500)
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+}
+
+model AssetLibrary{
+  mediaId Int @id @default(autoincrement())
+  test Test @relation(fields: [testId],references: [testId])
+  testId Int
+  filename String
+  originalName String
+  mimetype String
+  size Int
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+}
+
+model Test{
+  testId Int @id @default(autoincrement())
+  testGroup TestGroup @relation(fields: [testGroupId],references: [testGroupId])
+  testGroupId Int
+  tags TestTag[]
+  assets AssetLibrary[]
+  answers Answer[]
+  attempts Attempt[]
+  questionsCount Int
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+}
+
+model TestTag{
+  testTagId Int @id @default(autoincrement())
+  test Test @relation(fields: [testId],references: [testId])
+  testId Int
+  author User @relation(fields: [authorId],references: [userId])
+  authorId Int
+  title String @db.VarChar(50)
+  description String @db.VarChar(200)
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+}
+
+model Answer{
+  answerId Int @id @default(autoincrement())
+  test Test @relation(fields: [testId],references: [testId])
+  testId Int
+  correctAnswer String @db.VarChar(500)
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+}
+
+model Attempt{
+  attempId Int @id @default(autoincrement())
+  user User @relation(fields: [userId],references: [userId])
+  userId Int
+  test Test @relation(fields: [testId],references: [testId])
+  testId Int
+  correctCount Int
+  wrongCount Int
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+}
+
+enum UserRole{
+  teacher
+  student
+}
