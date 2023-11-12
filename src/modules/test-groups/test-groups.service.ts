@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateTestGroupDto } from './dto/create-test-group.dto';
-import { UpdateTestGroupDto } from './dto/update-test-group.dto';
+// import { UpdateTestGroupDto } from './dto/update-test-group.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AuthEntity } from '../auth/auth.entity';
 
@@ -24,9 +24,9 @@ export class TestGroupsService {
     return `This action returns a #${id} testGroup`;
   }
 
-  update(id: number, updateTestGroupDto: UpdateTestGroupDto) {
-    return `This action updates a #${id} testGroup`;
-  }
+  // update(id: number, updateTestGroupDto: UpdateTestGroupDto) {
+  //   return `This action updates a #${id} testGroup`;
+  // }
 
   remove(id: number) {
     return `This action removes a #${id} testGroup`;

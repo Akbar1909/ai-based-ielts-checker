@@ -15,6 +15,7 @@ model User{
   testGroups TestGroup[]
   attempts Attempt[]
   tags TestTag[]
+  tests Test[]
   email  String @unique @db.VarChar(50)
   username String @unique @db.VarChar(50)
   password String 
@@ -25,7 +26,7 @@ model User{
 
 model TestGroup{
   testGroupId Int @id @default(autoincrement())
-  author User @relation(fields: [authorId],references: [userId])
+  author User @relation(fields: [authorId],references: [userId],onDelete: Cascade)
   authorId Int
   tests Test[]
   title String @db.VarChar(200)
@@ -36,23 +37,26 @@ model TestGroup{
 
 model AssetLibrary{
   mediaId Int @id @default(autoincrement())
-  test Test @relation(fields: [testId],references: [testId])
-  testId Int
+  test Test? @relation(fields: [testId],references: [testId],onDelete: Cascade)
+  testId Int?
   filename String
   originalName String
   mimetype String
   size Int
+  filePath String
   updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
 }
 
 model Test{
   testId Int @id @default(autoincrement())
-  testGroup TestGroup @relation(fields: [testGroupId],references: [testGroupId])
+  authort User @relation(fields: [authorId],references: [userId],onDelete: Cascade)
+  authorId Int
+  testGroup TestGroup @relation(fields: [testGroupId],references: [testGroupId],onDelete: Cascade)
   testGroupId Int
   tags TestTag[]
   assets AssetLibrary[]
-  answers Answer[]
+  answers String[]
   attempts Attempt[]
   questionsCount Int
   updatedAt DateTime @updatedAt
@@ -61,9 +65,8 @@ model Test{
 
 model TestTag{
   testTagId Int @id @default(autoincrement())
-  test Test @relation(fields: [testId],references: [testId])
-  testId Int
-  author User @relation(fields: [authorId],references: [userId])
+  tests Test[]
+  author User @relation(fields: [authorId],references: [userId],onDelete: Cascade)
   authorId Int
   title String @db.VarChar(50)
   description String @db.VarChar(200)
@@ -71,20 +74,11 @@ model TestTag{
   createdAt DateTime @default(now())
 }
 
-model Answer{
-  answerId Int @id @default(autoincrement())
-  test Test @relation(fields: [testId],references: [testId])
-  testId Int
-  correctAnswer String @db.VarChar(500)
-  updatedAt DateTime @updatedAt
-  createdAt DateTime @default(now())
-}
-
 model Attempt{
   attempId Int @id @default(autoincrement())
-  user User @relation(fields: [userId],references: [userId])
+  user User @relation(fields: [userId],references: [userId], onDelete: Cascade)
   userId Int
-  test Test @relation(fields: [testId],references: [testId])
+  test Test @relation(fields: [testId],references: [testId], onDelete: Cascade)
   testId Int
   correctCount Int
   wrongCount Int

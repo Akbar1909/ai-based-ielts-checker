@@ -7,12 +7,15 @@ import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { TestGroupsModule } from './modules/test-groups/test-groups.module';
+import { TestsModule } from './modules/tests/tests.module';
+import { UploadModule } from './modules/upload/upload.module';
 
 @Module({
   imports: [
     UsersModule,
     TestGroupsModule,
     AuthModule,
+    UploadModule,
     PrismaModule,
     ConfigModule.forRoot({
       isGlobal: true,
@@ -20,6 +23,7 @@ import { TestGroupsModule } from './modules/test-groups/test-groups.module';
       validationSchema,
     }),
     TestGroupsModule,
+    TestsModule,
   ],
   providers: [
     {

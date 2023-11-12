@@ -43,7 +43,7 @@ export class TestGroupsController {
     @Param('id') id: string,
     @Body() updateTestGroupDto: UpdateTestGroupDto,
   ) {
-    return this.testGroupsService.update(+id, updateTestGroupDto);
+    // return this.testGroupsService.update(+id, updateTestGroupDto);
   }
 
   @Delete(':id')

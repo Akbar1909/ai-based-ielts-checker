@@ -12,7 +12,7 @@ export class AuthController {
   }
 
   @Post('signup')
-  async signup(@Body() body) {
+  async signup(@Body() body: any) {
     return this.authService.signup(body);
   }
 }
