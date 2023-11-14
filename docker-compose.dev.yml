@@ -12,7 +12,7 @@ services:
       - "5432:5432"
 
   web:
-    container_name: web
+    container_name: ielts-web
     build:
       context: .
       dockerfile: Dockerfile.dev
@@ -28,7 +28,7 @@ services:
   pgadmin:
     image: dpage/pgadmin4
     restart: always
-    container_name: nest-pgadmin4
+    container_name: ielts-pgadmin4
     environment:
       - PGADMIN_DEFAULT_EMAIL=admin@admin.com
       - PGADMIN_DEFAULT_PASSWORD=pgadmin4

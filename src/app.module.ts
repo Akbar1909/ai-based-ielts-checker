@@ -9,6 +9,8 @@ import { AuthModule } from './modules/auth/auth.module';
 import { TestGroupsModule } from './modules/test-groups/test-groups.module';
 import { TestsModule } from './modules/tests/tests.module';
 import { UploadModule } from './modules/upload/upload.module';
+import { WordTagsModule } from './modules/word-tags/word-tags.module';
+import { WordsModule } from './modules/words/words.module';
 
 @Module({
   imports: [
@@ -24,6 +26,8 @@ import { UploadModule } from './modules/upload/upload.module';
     }),
     TestGroupsModule,
     TestsModule,
+    WordTagsModule,
+    WordsModule,
   ],
   providers: [
     {
