@@ -1,7 +1,7 @@
 version: '3.0'
 
 services:
-  db:
+  checker-db:
     image: postgres:13.0-alpine
     volumes:
       - postgres_data:/var/lib/postgresql/data/
@@ -19,6 +19,6 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - db
+      - checker_db
 volumes:
   postgres_data:
