@@ -19,6 +19,6 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - checker_db
+      - checker-db
 volumes:
   postgres_data:
