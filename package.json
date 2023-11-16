@@ -25,7 +25,8 @@
     "prod:run": "docker compose -f docker-compose.prod.yml up -d",
     "prod:build": "docker-compose -f docker-compose.prod.yml build",
     "prod": "npm run prod:run",
-    "stop:prod": "docker compose -f docker-compose.prod.yml down"
+    "stop:prod": "docker compose -f docker-compose.prod.yml down",
+    "clean": "docker rm $(docker ps -aq)"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
