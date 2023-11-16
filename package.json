@@ -21,7 +21,10 @@
     "dev:run": "docker compose -f docker-compose.dev.yml up -d checker-db pgadmin && docker compose -f docker-compose.dev.yml up web",
     "dev:build": "docker-compose -f docker-compose.dev.yml build",
     "dev": "npm run dev:run",
-    "stop": "docker compose -f docker-compose.dev.yml down"
+    "stop": "docker compose -f docker-compose.dev.yml down",
+    "prod:run": "docker compose -f docker-compose.prod.yml up -d",
+    "prod:build": "docker-compose -f docker-compose.prod.yml build",
+    "prod": "npm run prod:run"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
