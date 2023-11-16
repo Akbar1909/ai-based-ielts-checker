@@ -16,7 +16,9 @@ export class WordsService {
   }
 
   async findAll() {
-    const records = await this.prisma.word.findMany();
+    const records = await this.prisma.word.findMany({
+      include: { wordTag: true },
+    });
     return {
       status: 'success',
       data: records,
