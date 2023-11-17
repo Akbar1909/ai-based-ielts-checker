@@ -30,8 +30,9 @@ async function bootstrap() {
   SwaggerModule.setup('swagger', app, document);
 
   const LOCAL_URL = 'http://localhost:3001';
+  const DEV_URL = 'http://93.115.18.106';
   app.enableCors({
-    origin: LOCAL_URL,
+    origin: DEV_URL,
     credentials: true,
   });
 
