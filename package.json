@@ -22,7 +22,7 @@
     "dev:build": "docker-compose -f docker-compose.dev.yml build",
     "dev": "npm run dev:run",
     "stop": "docker compose -f docker-compose.dev.yml down",
-    "prod:run": "docker compose -f docker-compose.prod.yml up -d checker-db && docker compose -f docker-compose.prod.yml up web",
+    "prod:run": "docker compose -f docker-compose.prod.yml up -d",
     "prod:build": "docker-compose -f docker-compose.prod.yml build",
     "prod": "npm run prod:run",
     "stop:prod": "docker compose -f docker-compose.prod.yml down",
