@@ -1,10 +1,6 @@
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class CreateWordDto {
-  @IsNumber()
-  @IsNotEmpty()
-  wordTagId: number;
-
   @IsString()
   @IsNotEmpty()
   word: string;
@@ -17,7 +13,7 @@ export class CreateWordDto {
   @IsNotEmpty()
   example: string;
 
-  @IsString()
+  @IsNumber()
   @IsNotEmpty()
-  photoUrl: string;
+  mediaId: number;
 }

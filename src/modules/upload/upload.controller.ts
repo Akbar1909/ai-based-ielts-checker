@@ -21,6 +21,11 @@ import LocalFilesInterceptor from 'src/interceptors/local-file.interceptor';
 export class UploadController {
   constructor(private readonly uploadService: UploadService) {}
 
+  @Get()
+  findAll() {
+    return this.uploadService.findAll();
+  }
+
   @Post()
   @UseInterceptors(LocalFilesInterceptor({ fieldName: 'file', path: '' }))
   upload(
@@ -62,5 +67,11 @@ export class UploadController {
     id: number,
   ) {
     return this.uploadService.deleteOne(id);
+  }
+
+  @Get('serve/:photoName')
+  serverPhoto(@Param('photoName') photoName: string) {
+    console.log({ photoName });
+    return this.uploadService.servePhoto(photoName);
   }
 }

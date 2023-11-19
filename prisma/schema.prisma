@@ -39,11 +39,13 @@ model AssetLibrary{
   mediaId Int @id @default(autoincrement())
   test Test? @relation(fields: [testId],references: [testId],onDelete: Cascade)
   testId Int?
+  word Word?
   filename String
   originalName String
   mimetype String
   size Int
   filePath String
+  viewUrl String? @default("")
   updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
 }
@@ -89,11 +91,12 @@ model Attempt{
 model Word{
   wordId Int @id @default(autoincrement())
   wordTag WordTag @relation(fields: [wordTagId],references: [wordTagId])
+  media AssetLibrary? @relation(fields: [mediaId],references: [mediaId])
+  mediaId Int? @unique
   wordTagId Int
   word String
   description String
   example String
-  photoUrl String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
