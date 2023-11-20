@@ -90,13 +90,14 @@ model Attempt{
 
 model Word{
   wordId Int @id @default(autoincrement())
-  wordTag WordTag @relation(fields: [wordTagId],references: [wordTagId])
+  wordTag WordTag? @relation(fields: [wordTagId],references: [wordTagId])
   media AssetLibrary? @relation(fields: [mediaId],references: [mediaId])
   mediaId Int? @unique
-  wordTagId Int
+  wordTagId Int?
   word String
   description String
   example String
+  level WordLevel?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -105,6 +106,7 @@ model WordTag{
   wordTagId Int @id @default(autoincrement())
   words Word[]
   tag String
+  color String @default("red")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -112,4 +114,13 @@ model WordTag{
 enum UserRole{
   teacher
   student
+}
+
+enum WordLevel{
+  A1
+  A2
+  B1
+  B2
+  C1
+  C2
 }

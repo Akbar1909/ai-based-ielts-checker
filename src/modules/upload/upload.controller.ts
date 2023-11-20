@@ -71,7 +71,6 @@ export class UploadController {
 
   @Get('serve/:photoName')
   serverPhoto(@Param('photoName') photoName: string) {
-    console.log({ photoName });
     return this.uploadService.servePhoto(photoName);
   }
 }

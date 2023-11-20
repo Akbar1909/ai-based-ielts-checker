@@ -1,4 +1,11 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
+import { WordLevelEnum } from '../entities/word.level';
 
 export class CreateWordDto {
   @IsString()
@@ -16,4 +23,12 @@ export class CreateWordDto {
   @IsNumber()
   @IsNotEmpty()
   mediaId: number;
+
+  @IsNumber()
+  @IsOptional()
+  wordTagId?: number;
+
+  @IsEnum(WordLevelEnum)
+  @IsOptional()
+  level?: WordLevelEnum;
 }

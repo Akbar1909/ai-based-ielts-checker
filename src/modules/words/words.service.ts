@@ -9,10 +9,7 @@ export class WordsService {
 
   async create(createWordDto: CreateWordDto) {
     const newRecord = await this.prisma.word.create({
-      data: {
-        ...createWordDto,
-        wordTagId: 2,
-      },
+      data: createWordDto,
     });
     return {
       status: 'success',
@@ -24,8 +21,6 @@ export class WordsService {
     const records = await this.prisma.word.findMany({
       include: { wordTag: true, media: true },
     });
-
-    console.log(records);
 
     return {
       status: 'success',
