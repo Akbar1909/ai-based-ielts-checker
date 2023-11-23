@@ -12,10 +12,12 @@ import {
   MaxFileSizeValidator,
   HttpCode,
   Delete,
+  Res,
 } from '@nestjs/common';
 import { Express } from 'express';
 import { UploadService } from './upload.service';
 import LocalFilesInterceptor from 'src/interceptors/local-file.interceptor';
+import { Observable, of } from 'rxjs';
 
 @Controller('upload')
 export class UploadController {
@@ -70,7 +72,10 @@ export class UploadController {
   }
 
   @Get('serve/:photoName')
-  serverPhoto(@Param('photoName') photoName: string) {
-    return this.uploadService.servePhoto(photoName);
+  serverPhoto(
+    @Param('photoName') photoName: string,
+    @Res() res: any,
+  ): Observable<Object> {
+    return of(res.sendFile(this.uploadService.buildFilepath(photoName)));
   }
 }

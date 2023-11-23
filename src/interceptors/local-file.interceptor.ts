@@ -28,7 +28,7 @@ function LocalFilesInterceptor(
         storage: diskStorage({
           destination,
           filename: (_: any, file: any, cb) => {
-            cb(null, file.originalname + '-' + format(new Date()));
+            cb(null, `${format(new Date())}- ${file.originalname}`);
           },
         }),
       };

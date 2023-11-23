@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { join } from 'path';
 import * as fs from 'fs';
 import { PrismaService } from '../../prisma/prisma.service';
-import { createUrlFromFile } from 'src/utils/createUrlFromFile';
+
 ('@nestjs/platform-express');
 
 @Injectable()
@@ -19,12 +19,6 @@ export class UploadService {
   }
 
   async upload(file: Express.Multer.File) {
-    const media = await this.getFile(file.filename);
-
-    const url = createUrlFromFile(media as any);
-
-    console.log(media, this.buildFilepath(file.filename));
-
     const dbEntity = await this.prisma.assetLibrary.create({
       data: {
         filename: file.filename,
