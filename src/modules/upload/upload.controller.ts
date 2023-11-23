@@ -19,7 +19,7 @@ import { UploadService } from './upload.service';
 import LocalFilesInterceptor from 'src/interceptors/local-file.interceptor';
 import { Observable, of } from 'rxjs';
 
-@Controller('upload')
+@Controller('files')
 export class UploadController {
   constructor(private readonly uploadService: UploadService) {}
 
@@ -75,7 +75,8 @@ export class UploadController {
   serverPhoto(
     @Param('photoName') photoName: string,
     @Res() res: any,
-  ): Observable<Object> {
+  ): Observable<object> {
+    console.log({ photoName });
     return of(res.sendFile(this.uploadService.buildFilepath(photoName)));
   }
 }
