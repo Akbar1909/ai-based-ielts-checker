@@ -23,11 +23,13 @@ import { Observable, of } from 'rxjs';
 export class UploadController {
   constructor(private readonly uploadService: UploadService) {}
 
+  @HttpCode(HttpStatus.OK)
   @Get()
   findAll() {
     return this.uploadService.findAll();
   }
 
+  @HttpCode(HttpStatus.CREATED)
   @Post()
   @UseInterceptors(LocalFilesInterceptor({ fieldName: 'file', path: '' }))
   upload(
