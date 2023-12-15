@@ -22,7 +22,7 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
-  @Get('/one')
+  @Get('one')
   findOne() {
     return 'only one';
   }
