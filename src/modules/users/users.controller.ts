@@ -22,6 +22,11 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
+  @Get('/one')
+  findOne() {
+    return 'only one';
+  }
+
   @HttpCode(HttpStatus.CREATED)
   @Post()
   create() {
