@@ -21,7 +21,7 @@ export class CreateWordDto {
   example: string;
 
   @IsNumber()
-  @IsNotEmpty()
+  @IsOptional()
   mediaId: number;
 
   @IsNumber()
