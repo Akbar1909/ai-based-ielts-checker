@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateWordDto } from './dto/create-word.dto';
 import { UpdateWordDto } from './dto/update-word.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { getAutoFilledModelFields } from 'src/utils/autoFilledModelProperties';
 
 @Injectable()
 export class WordsService {
@@ -9,7 +10,10 @@ export class WordsService {
 
   async create(createWordDto: CreateWordDto) {
     const newRecord = await this.prisma.word.create({
-      data: createWordDto,
+      data: {
+        ...createWordDto,
+        ...getAutoFilledModelFields(true),
+      },
     });
     return {
       status: 'success',
@@ -47,7 +51,10 @@ export class WordsService {
 
     record = await this.prisma.word.update({
       where: { wordId: id },
-      data: updateWordDto,
+      data: {
+        ...updateWordDto,
+        ...getAutoFilledModelFields(),
+      },
     });
 
     return {

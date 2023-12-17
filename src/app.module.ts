@@ -1,18 +1,14 @@
 import { Module } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
-import { ServeStaticModule } from '@nestjs/serve-static';
 import { HttpExceptionFilter } from './global-filters/http-exception.filter';
 import { PrismaModule } from './prisma/prisma.module';
 import { configuration, validationSchema } from './config';
 import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
-import { TestGroupsModule } from './modules/test-groups/test-groups.module';
-import { TestsModule } from './modules/tests/tests.module';
 import { UploadModule } from './modules/upload/upload.module';
 import { WordTagsModule } from './modules/word-tags/word-tags.module';
 import { WordsModule } from './modules/words/words.module';
-import { join } from 'path';
 
 @Module({
   imports: [
@@ -21,7 +17,6 @@ import { join } from 'path';
     //   exclude: ['/api/(.*)'],
     // }),
     UsersModule,
-    TestGroupsModule,
     AuthModule,
     UploadModule,
     PrismaModule,
@@ -30,8 +25,6 @@ import { join } from 'path';
       load: [configuration],
       validationSchema,
     }),
-    TestGroupsModule,
-    TestsModule,
     WordTagsModule,
     WordsModule,
   ],

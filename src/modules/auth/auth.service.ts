@@ -10,6 +10,7 @@ import { UserEntity } from '../users/entity';
 import { UserCreateDto } from '../users/dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { LoginDto } from './dto/login.dto';
+import { getAutoFilledModelFields } from 'src/utils/autoFilledModelProperties';
 
 @Injectable()
 export class AuthService {
@@ -48,7 +49,7 @@ export class AuthService {
   async signup(user: UserCreateDto) {
     const hash = await this.generateHash(user.password);
     const newUser = await this.prisma.user.create({
-      data: { ...user, password: hash },
+      data: { ...user, password: hash, ...getAutoFilledModelFields(true) },
     });
 
     return this.getToken(newUser);

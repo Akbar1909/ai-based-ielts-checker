@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateWordTagDto } from './dto/create-word-tag.dto';
 import { UpdateWordTagDto } from './dto/update-word-tag.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { getAutoFilledModelFields } from 'src/utils/autoFilledModelProperties';
 
 @Injectable()
 export class WordTagsService {
@@ -9,7 +10,10 @@ export class WordTagsService {
 
   async create(createWordTagDto: CreateWordTagDto) {
     const newWordTag = await this.prisma.wordTag.create({
-      data: createWordTagDto,
+      data: {
+        ...createWordTagDto,
+        ...getAutoFilledModelFields(true),
+      },
     });
     return {
       status: 'success',
@@ -47,7 +51,7 @@ export class WordTagsService {
     }
 
     record = await this.prisma.wordTag.update({
-      where: { wordTagId: id },
+      where: { wordTagId: id, ...getAutoFilledModelFields() },
       data: updateWordTagDto,
     });
 

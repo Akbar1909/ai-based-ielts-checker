@@ -13,11 +13,13 @@ import {
   HttpCode,
   Delete,
   Res,
+  Body,
 } from '@nestjs/common';
 import { Express } from 'express';
 import { UploadService } from './upload.service';
 import LocalFilesInterceptor from 'src/interceptors/local-file.interceptor';
 import { Observable, of } from 'rxjs';
+import { UploadDataUrlDto } from './dto/upload-dataUrl.dto';
 
 @Controller('files')
 export class UploadController {
@@ -47,6 +49,13 @@ export class UploadController {
     file: Express.Multer.File,
   ) {
     return this.uploadService.upload(file);
+  }
+  @Post('data-url')
+  uploadDataUrl(
+    @Body()
+    uploadBodyDto: UploadDataUrlDto,
+  ) {
+    return this.uploadService.uploadDataUrl(uploadBodyDto);
   }
 
   @HttpCode(HttpStatus.OK)
@@ -78,7 +87,6 @@ export class UploadController {
     @Param('photoName') photoName: string,
     @Res() res: any,
   ): Observable<object> {
-    console.log({ photoName });
     return of(res.sendFile(this.uploadService.buildFilepath(photoName)));
   }
 }

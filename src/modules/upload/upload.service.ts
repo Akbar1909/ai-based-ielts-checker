@@ -2,6 +2,9 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { join } from 'path';
 import * as fs from 'fs';
 import { PrismaService } from '../../prisma/prisma.service';
+import { getAutoFilledModelFields } from 'src/utils/autoFilledModelProperties';
+import { UploadDataUrlDto } from './dto/upload-dataUrl.dto';
+import { getCurrentTime } from 'src/utils/time';
 
 ('@nestjs/platform-express');
 
@@ -26,6 +29,7 @@ export class UploadService {
         originalName: file.originalname,
         size: file.size,
         mimetype: file.mimetype,
+        ...getAutoFilledModelFields(true),
       },
     });
 
@@ -34,6 +38,47 @@ export class UploadService {
       data: dbEntity,
     };
     return response;
+  }
+
+  async uploadDataUrl({ dataUrl }: UploadDataUrlDto) {
+    const regex = /^data:.+\/(.+);base64,(.*)$/;
+    const matches = dataUrl.match(regex);
+    const ext = matches?.[1];
+    const data = matches?.[2];
+    const head = 'data:image/png;base64,';
+    const fileSize = Math.round(((dataUrl.length - head.length) * 3) / 4);
+
+    if (!ext || !data) {
+      return {
+        status: 'error',
+        data: null,
+      };
+    }
+
+    const buffer = Buffer.from(data, 'base64');
+    const filename = `${getCurrentTime()}.${ext}`;
+    const filePath = this.buildFilepath(filename);
+    await fs.promises.writeFile(filePath, buffer);
+    const mimetype = dataUrl.substring(
+      dataUrl.indexOf(':') + 1,
+      dataUrl.indexOf(';'),
+    );
+
+    const dbEntity = await this.prisma.assetLibrary.create({
+      data: {
+        filename,
+        filePath,
+        originalName: filename,
+        size: fileSize,
+        mimetype,
+        ...getAutoFilledModelFields(true),
+      },
+    });
+
+    return {
+      message: 'File uploaded successfully',
+      data: dbEntity,
+    };
   }
 
   async findOne(id: number) {
@@ -87,5 +132,8 @@ export class UploadService {
     const imgSrc = `data:image/png;base64,${base64Image}`;
 
     return imgSrc;
+  }
+  async serveDataUrl(fileName: string) {
+    return await this.getFile(fileName);
   }
 }

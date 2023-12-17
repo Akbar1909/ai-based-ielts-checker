@@ -12,33 +12,18 @@ datasource db {
 
 model User{
   userId Int @id @default(autoincrement())
-  testGroups TestGroup[]
-  attempts Attempt[]
-  tags TestTag[]
-  tests Test[]
   email  String @unique @db.VarChar(50)
   username String @unique @db.VarChar(50)
   password String 
   role UserRole @default(student)
-  updatedAt DateTime @updatedAt
-  createdAt DateTime @default(now())
+  updatedAt String
+  createdAt String
 }
 
-model TestGroup{
-  testGroupId Int @id @default(autoincrement())
-  author User @relation(fields: [authorId],references: [userId],onDelete: Cascade)
-  authorId Int
-  tests Test[]
-  title String @db.VarChar(200)
-  description String @db.VarChar(500)
-  updatedAt DateTime @updatedAt
-  createdAt DateTime @default(now())
-}
+
 
 model AssetLibrary{
   mediaId Int @id @default(autoincrement())
-  test Test? @relation(fields: [testId],references: [testId],onDelete: Cascade)
-  testId Int?
   word Word?
   filename String
   originalName String
@@ -46,46 +31,8 @@ model AssetLibrary{
   size Int
   filePath String
   viewUrl String? @default("")
-  updatedAt DateTime @updatedAt
-  createdAt DateTime @default(now())
-}
-
-model Test{
-  testId Int @id @default(autoincrement())
-  authort User @relation(fields: [authorId],references: [userId],onDelete: Cascade)
-  authorId Int
-  testGroup TestGroup @relation(fields: [testGroupId],references: [testGroupId],onDelete: Cascade)
-  testGroupId Int
-  tags TestTag[]
-  assets AssetLibrary[]
-  answers String[]
-  attempts Attempt[]
-  questionsCount Int
-  updatedAt DateTime @updatedAt
-  createdAt DateTime @default(now())
-}
-
-model TestTag{
-  testTagId Int @id @default(autoincrement())
-  tests Test[]
-  author User @relation(fields: [authorId],references: [userId],onDelete: Cascade)
-  authorId Int
-  title String @db.VarChar(50)
-  description String @db.VarChar(200)
-  updatedAt DateTime @updatedAt
-  createdAt DateTime @default(now())
-}
-
-model Attempt{
-  attempId Int @id @default(autoincrement())
-  user User @relation(fields: [userId],references: [userId], onDelete: Cascade)
-  userId Int
-  test Test @relation(fields: [testId],references: [testId], onDelete: Cascade)
-  testId Int
-  correctCount Int
-  wrongCount Int
-  updatedAt DateTime @updatedAt
-  createdAt DateTime @default(now())
+  updatedAt String
+  createdAt String
 }
 
 model Word{
@@ -98,17 +45,18 @@ model Word{
   description String
   example String
   level WordLevel?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  partOfSpeech String? @default("")
+  createdAt String
+  updatedAt String
 }
 
 model WordTag{
   wordTagId Int @id @default(autoincrement())
   words Word[]
   tag String
-  color String @default("red")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  color String @default("")
+  createdAt String
+  updatedAt String
 }
 
 enum UserRole{

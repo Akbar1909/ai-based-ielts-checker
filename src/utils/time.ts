@@ -19,16 +19,12 @@ export function format(date: Date | number, separator = '.') {
   return `${day}#${month}#${year}`.replaceAll('#', separator);
 }
 
-export function subtract5Hours(date: Date) {
-  // Create a new Date object for the current date and time
-
-  // Subtract 5 hours from the current date and time
-  date.setHours(date.getHours() - 5);
-  return date;
-}
-
 export function formatDate(date: string | Date, format = 'YYYY-MM-DD') {
   return dayjs(date).format(format);
+}
+
+export function getCurrentTime() {
+  return dayjs().valueOf();
 }
 
 export default dayjs;

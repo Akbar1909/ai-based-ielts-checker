@@ -1,6 +1,7 @@
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { urlencoded, json } from 'express';
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './global-filters/all-exception.filter';
 
@@ -20,6 +21,8 @@ async function bootstrap() {
 
   app.setGlobalPrefix('api/v1');
 
+  app.use(json({ limit: '50mb' }));
+  app.use(urlencoded({ extended: true, limit: '50mb' }));
   const config = new DocumentBuilder()
     .setTitle('Client management')
     .setDescription(`### The client-management API description`)

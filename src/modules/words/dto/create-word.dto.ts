@@ -20,6 +20,10 @@ export class CreateWordDto {
   @IsNotEmpty()
   example: string;
 
+  @IsString()
+  @IsOptional()
+  partOfSpeech: string;
+
   @IsNumber()
   @IsOptional()
   mediaId: number;
