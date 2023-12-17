@@ -21,18 +21,15 @@ export class CreateWordDto {
   example: string;
 
   @IsString()
-  @IsOptional()
   partOfSpeech: string;
 
   @IsNumber()
-  @IsOptional()
-  mediaId: number;
-
-  @IsNumber()
-  @IsOptional()
   wordTagId?: number;
 
   @IsEnum(WordLevelEnum)
-  @IsOptional()
   level?: WordLevelEnum;
+
+  @IsString()
+  @IsNotEmpty()
+  dataUrl: string;
 }

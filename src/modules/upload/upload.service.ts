@@ -76,6 +76,7 @@ export class UploadService {
     });
 
     return {
+      status: 'success',
       message: 'File uploaded successfully',
       data: dbEntity,
     };

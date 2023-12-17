@@ -3,15 +3,31 @@ import { CreateWordDto } from './dto/create-word.dto';
 import { UpdateWordDto } from './dto/update-word.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { getAutoFilledModelFields } from 'src/utils/autoFilledModelProperties';
+import { UploadService } from '../upload/upload.service';
 
 @Injectable()
 export class WordsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly uploadService: UploadService,
+  ) {}
 
-  async create(createWordDto: CreateWordDto) {
+  async create({ dataUrl, ...createWordDto }: CreateWordDto) {
+    const { status, data: media } = await this.uploadService.uploadDataUrl({
+      dataUrl,
+    });
+
+    if (status !== 'success') {
+      throw new NotFoundException({
+        status: 'error',
+        message: 'Error occurred in storing the image, Please retry 😊',
+      });
+    }
+
     const newRecord = await this.prisma.word.create({
       data: {
         ...createWordDto,
+        mediaId: media?.mediaId,
         ...getAutoFilledModelFields(true),
       },
     });
