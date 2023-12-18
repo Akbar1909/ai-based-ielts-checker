@@ -21,8 +21,8 @@ async function bootstrap() {
 
   app.setGlobalPrefix('api/v1');
 
-  app.use(json({ limit: '10mb' }));
-  app.use(urlencoded({ extended: true, limit: '10mb' }));
+  // app.use(json({ limit: '10mb' }));
+  // app.use(urlencoded({ extended: true, limit: '10mb' }));
   const config = new DocumentBuilder()
     .setTitle('Client management')
     .setDescription(`### The client-management API description`)
