@@ -60,6 +60,7 @@ model WordTag{
 }
 
 enum UserRole{
+  admin
   teacher
   student
 }
