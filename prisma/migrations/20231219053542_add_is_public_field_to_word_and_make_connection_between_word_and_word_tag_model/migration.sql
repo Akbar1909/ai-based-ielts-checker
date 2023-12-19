@@ -1,0 +1,15 @@
+-- AlterEnum
+ALTER TYPE "UserRole" ADD VALUE 'admin';
+
+-- AlterTable
+ALTER TABLE "Word" ADD COLUMN     "isPublic" BOOLEAN NOT NULL DEFAULT false,
+ADD COLUMN     "userId" INTEGER NOT NULL DEFAULT 1;
+
+-- AlterTable
+ALTER TABLE "WordTag" ADD COLUMN     "userId" INTEGER NOT NULL DEFAULT 1;
+
+-- AddForeignKey
+ALTER TABLE "Word" ADD CONSTRAINT "Word_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("userId") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "WordTag" ADD CONSTRAINT "WordTag_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("userId") ON DELETE RESTRICT ON UPDATE CASCADE;

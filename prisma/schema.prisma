@@ -12,6 +12,8 @@ datasource db {
 
 model User{
   userId Int @id @default(autoincrement())
+  wordTags WordTag[]
+  words  Word[]
   email  String @unique @db.VarChar(50)
   username String @unique @db.VarChar(50)
   password String 
@@ -37,26 +39,35 @@ model AssetLibrary{
 
 model Word{
   wordId Int @id @default(autoincrement())
+  user User @relation(fields: [userId],references: [userId])
+  userId Int @default(1)
   wordTag WordTag? @relation(fields: [wordTagId],references: [wordTagId])
+  wordTagId Int?
   media AssetLibrary? @relation(fields: [mediaId],references: [mediaId])
   mediaId Int? @unique
-  wordTagId Int?
   word String
   description String
   example String
   level WordLevel?
   partOfSpeech String? @default("")
+  isPublic  Boolean @default(false)
   createdAt String
   updatedAt String
+
+  @@unique([word, wordTagId ,userId])
 }
 
 model WordTag{
   wordTagId Int @id @default(autoincrement())
+  user User @relation(fields: [userId],references: [userId])
+  userId Int @default(1)
   words Word[]
-  tag String
+  tag String   
   color String @default("")
   createdAt String
   updatedAt String
+
+  @@unique([tag,userId])
 }
 
 enum UserRole{
