@@ -5,5 +5,6 @@ import { WordTagsController } from './word-tags.controller';
 @Module({
   controllers: [WordTagsController],
   providers: [WordTagsService],
+  exports: [WordTagsService],
 })
 export class WordTagsModule {}

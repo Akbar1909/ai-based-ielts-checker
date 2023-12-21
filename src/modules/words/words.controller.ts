@@ -6,10 +6,12 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { WordsService } from './words.service';
 import { CreateWordDto } from './dto/create-word.dto';
 import { UpdateWordDto } from './dto/update-word.dto';
+import { FindAllWordDto } from './dto/find-all-word.dto';
 
 @Controller('words')
 export class WordsController {
@@ -21,8 +23,13 @@ export class WordsController {
   }
 
   @Get()
-  findAll() {
-    return this.wordsService.findAll();
+  findAll(@Query() query: FindAllWordDto) {
+    return this.wordsService.findAll(query);
+  }
+
+  @Get('/count')
+  getCounts() {
+    return this.wordsService.getCountByTag();
   }
 
   @Get(':id')

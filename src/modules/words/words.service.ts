@@ -4,6 +4,8 @@ import { UpdateWordDto } from './dto/update-word.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { getAutoFilledModelFields } from 'src/utils/autoFilledModelProperties';
 import { UploadService } from '../upload/upload.service';
+import { FindAllWordDto } from './dto/find-all-word.dto';
+import { makeItMap } from 'src/utils/makeItMap';
 
 @Injectable()
 export class WordsService {
@@ -37,14 +39,64 @@ export class WordsService {
     };
   }
 
-  async findAll() {
-    const records = await this.prisma.word.findMany({
-      include: { wordTag: true, media: true },
-    });
+  async findAll({ page, size }: FindAllWordDto) {
+    const config = {
+      skip: page * size,
+      take: size,
+    };
+
+    const [records, total] = await this.prisma.$transaction([
+      this.prisma.word.findMany({
+        include: { wordTag: true, media: true },
+        ...config,
+      }),
+      this.prisma.word.count(),
+    ]);
 
     return {
       status: 'success',
-      data: records,
+      data: {
+        prev: page + 1 > 1 ? page - 1 : null,
+        next: (page + 1) * size < total ? page + 1 : null,
+        page,
+        size,
+        total,
+        counts: records.length,
+        records,
+      },
+    };
+  }
+
+  async getCountByTag() {
+    const counts = await this.prisma.word.groupBy({
+      by: ['wordTagId'],
+      _count: true,
+    });
+
+    const keyValue = makeItMap(counts, 'wordTagId');
+
+    const wordTags = await this.prisma.wordTag.findMany({
+      where: {
+        wordTagId: { in: counts.map((count) => count.wordTagId as number) },
+      },
+      select: {
+        color: true,
+        tag: true,
+        wordTagId: true,
+      },
+      orderBy: {
+        tag: 'asc',
+      },
+    });
+
+    const output = wordTags.map((wordTag) => ({
+      ...wordTag,
+      count: keyValue.get(wordTag.wordTagId)._count,
+    }));
+
+    return {
+      status: 'success',
+      data: output,
     };
   }
 
