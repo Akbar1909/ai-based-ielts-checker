@@ -1,5 +1,7 @@
 import {
   BadRequestException,
+  HttpException,
+  HttpStatus,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -20,18 +22,18 @@ export class AuthService {
     private readonly prisma: PrismaService,
   ) {}
 
-  async validateUser(username: UserEntity['username']): Promise<any> {
-    const user = await this.usersService.findByUsername(username);
+  async validateUser(email: UserEntity['email']): Promise<any> {
+    const user = await this.usersService.findByEmail(email);
 
     return user;
   }
 
-  async login(dto: LoginDto) {
-    const user: UserEntity = await this.validateUser(dto.username);
+  async signin(dto: LoginDto) {
+    const user: UserEntity = await this.validateUser(dto.email);
 
     if (!user) {
       throw new NotFoundException(
-        `User with the provided ${dto.username} does not exist`,
+        `User with the provided ${dto.email} does not exist`,
       );
     }
 
@@ -47,6 +49,17 @@ export class AuthService {
   }
 
   async signup(user: UserCreateDto) {
+    const pre = await this.validateUser(user.email);
+
+    if (pre) {
+      throw new HttpException(
+        {
+          message: `User with the ${user.email} is already exist`,
+        },
+        HttpStatus.CONFLICT,
+      );
+    }
+
     const hash = await this.generateHash(user.password);
     const newUser = await this.prisma.user.create({
       data: { ...user, password: hash, ...getAutoFilledModelFields(true) },
@@ -74,5 +87,21 @@ export class AuthService {
     hash: UserEntity['password'],
   ) {
     return await bcrypt.compare(password, hash);
+  }
+
+  async checkUsernameExist({ username }: Pick<UserEntity, 'username'>) {
+    const record = await this.prisma.user.findFirst({ where: { username } });
+
+    if (record) {
+      throw new HttpException(
+        { message: 'User already exist' },
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    return {
+      data: null,
+      status: 'success',
+    };
   }
 }

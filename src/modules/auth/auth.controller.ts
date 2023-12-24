@@ -1,18 +1,25 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
+import { UserEntity } from '../users/entity';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('signin')
-  async signin(@Body() body: LoginDto) {
-    return this.authService.login(body);
+  signin(@Body() body: LoginDto) {
+    return this.authService.signin(body);
   }
 
   @Post('signup')
-  async signup(@Body() body: any) {
+  signup(@Body() body: any) {
     return this.authService.signup(body);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('check-username-exist')
+  checkUsernameExist(@Body() body: Pick<UserEntity, 'username'>) {
+    return this.authService.checkUsernameExist(body);
   }
 }

@@ -10,7 +10,7 @@ export class UsersService {
   update() {}
   delete() {}
 
-  async findByUsername(username: UserEntity['username']) {
-    return await this.prisma.user.findFirst({ where: { username } });
+  async findByEmail(email: UserEntity['email']) {
+    return await this.prisma.user.findFirst({ where: { email } });
   }
 }
