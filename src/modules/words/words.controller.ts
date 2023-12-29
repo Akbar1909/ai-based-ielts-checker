@@ -11,7 +11,7 @@ import {
 import { WordsService } from './words.service';
 import { CreateWordDto } from './dto/create-word.dto';
 import { UpdateWordDto } from './dto/update-word.dto';
-import { FindAllWordDto } from './dto/find-all-word.dto';
+import { FindAllWordDto, FindAllWordPartialDto } from './dto/find-all-word.dto';
 
 @Controller('words')
 export class WordsController {
@@ -30,6 +30,11 @@ export class WordsController {
   @Get('/count')
   getCounts() {
     return this.wordsService.getCountByTag();
+  }
+
+  @Get('/word-tag')
+  findAllByWordTagId(@Query() query: FindAllWordPartialDto) {
+    return this.wordsService.findWordsByWordTagIds(query);
   }
 
   @Get(':id')

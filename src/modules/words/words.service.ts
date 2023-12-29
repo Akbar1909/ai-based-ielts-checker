@@ -4,7 +4,7 @@ import { UpdateWordDto } from './dto/update-word.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { getAutoFilledModelFields } from 'src/utils/autoFilledModelProperties';
 import { UploadService } from '../upload/upload.service';
-import { FindAllWordDto } from './dto/find-all-word.dto';
+import { FindAllWordDto, FindAllWordPartialDto } from './dto/find-all-word.dto';
 import { makeItMap } from 'src/utils/makeItMap';
 
 @Injectable()
@@ -64,6 +64,24 @@ export class WordsService {
         counts: records.length,
         records,
       },
+    };
+  }
+
+  async findWordsByWordTagIds({ wordTag }: FindAllWordPartialDto) {
+    if (wordTag?.length === 0) {
+      return {
+        status: 'success',
+        data: [],
+      };
+    }
+
+    const records = await this.prisma.word.findMany({
+      where: { wordTagId: { in: wordTag } },
+    });
+
+    return {
+      status: 'success',
+      data: records,
     };
   }
 

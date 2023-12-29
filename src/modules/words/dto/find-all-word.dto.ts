@@ -1,5 +1,12 @@
+import { PartialType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsNotEmpty, IsNumber } from 'class-validator';
+import {
+  IsArray,
+  IsInt,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+} from 'class-validator';
 
 export class FindAllWordDto {
   @IsNumber()
@@ -11,4 +18,12 @@ export class FindAllWordDto {
   @Type(() => Number)
   @IsNotEmpty()
   size: number;
+
+  @IsOptional()
+  @IsArray()
+  @IsInt({ each: true })
+  @Type(() => Number)
+  wordTag: number[];
 }
+
+export class FindAllWordPartialDto extends PartialType(FindAllWordDto) {}
