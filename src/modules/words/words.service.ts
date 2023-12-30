@@ -77,6 +77,9 @@ export class WordsService {
 
     const records = await this.prisma.word.findMany({
       where: { wordTagId: { in: wordTag } },
+      include: {
+        media: true,
+      },
     });
 
     return {
