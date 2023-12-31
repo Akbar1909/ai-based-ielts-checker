@@ -26,4 +26,8 @@ export class CreateWordDto {
   @IsString()
   @IsNotEmpty()
   dataUrl: string;
+
+  @IsNumber()
+  @IsNotEmpty()
+  aspectRatio: number;
 }

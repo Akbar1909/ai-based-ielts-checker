@@ -40,7 +40,7 @@ export class UploadService {
     return response;
   }
 
-  async uploadDataUrl({ dataUrl }: UploadDataUrlDto) {
+  async uploadDataUrl({ dataUrl, aspectRatio }: UploadDataUrlDto) {
     const regex = /^data:.+\/(.+);base64,(.*)$/;
     const matches = dataUrl.match(regex);
     const ext = matches?.[1];
@@ -64,6 +64,8 @@ export class UploadService {
       dataUrl.indexOf(';'),
     );
 
+    console.log({ aspectRatio });
+
     const dbEntity = await this.prisma.assetLibrary.create({
       data: {
         filename,
@@ -71,6 +73,7 @@ export class UploadService {
         originalName: filename,
         size: fileSize,
         mimetype,
+        aspectRatio,
         ...getAutoFilledModelFields(true),
       },
     });

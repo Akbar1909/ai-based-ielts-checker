@@ -14,9 +14,10 @@ export class WordsService {
     private readonly uploadService: UploadService,
   ) {}
 
-  async create({ dataUrl, ...createWordDto }: CreateWordDto) {
+  async create({ dataUrl, aspectRatio, ...createWordDto }: CreateWordDto) {
     const { status, data: media } = await this.uploadService.uploadDataUrl({
       dataUrl,
+      aspectRatio,
     });
 
     if (status !== 'success') {
@@ -47,7 +48,10 @@ export class WordsService {
 
     const [records, total] = await this.prisma.$transaction([
       this.prisma.word.findMany({
-        include: { wordTag: true, media: true },
+        include: {
+          wordTag: true,
+          media: { select: { filename: true, aspectRatio: true } },
+        },
         ...config,
       }),
       this.prisma.word.count(),
@@ -78,7 +82,12 @@ export class WordsService {
     const records = await this.prisma.word.findMany({
       where: { wordTagId: { in: wordTag } },
       include: {
-        media: true,
+        media: {
+          select: {
+            aspectRatio: true,
+            filename: true,
+          },
+        },
       },
     });
 

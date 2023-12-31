@@ -33,6 +33,7 @@ model AssetLibrary{
   size Int
   filePath String
   viewUrl String? @default("")
+  aspectRatio Float? @default(1)
   updatedAt String
   createdAt String
 }
