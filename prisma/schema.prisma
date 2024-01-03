@@ -84,4 +84,5 @@ enum WordLevel{
   B2
   C1
   C2
+  N
 }
