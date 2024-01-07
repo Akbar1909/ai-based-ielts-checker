@@ -12,21 +12,22 @@ datasource db {
 
 model User{
   userId Int @id @default(autoincrement())
-  wordTags WordTag[]
-  words  Word[]
+  wordLists WordList[]
   email  String @unique @db.VarChar(50)
   username String @unique @db.VarChar(50)
   password String 
+  phone String @unique @db.VarChar(50)
   role UserRole @default(student)
-  updatedAt String
-  createdAt String
+  updatedAt Int
+  createdAt Int
 }
 
 
 
 model AssetLibrary{
   mediaId Int @id @default(autoincrement())
-  word Word?
+  word     Word? @relation(fields: [wordId],references: [wordId])
+  wordId   Int?
   filename String
   originalName String
   mimetype String
@@ -34,41 +35,38 @@ model AssetLibrary{
   filePath String
   viewUrl String? @default("")
   aspectRatio Float? @default(1)
-  updatedAt String
-  createdAt String
+  updatedAt Int
+  createdAt Int
 }
 
 model Word{
   wordId Int @id @default(autoincrement())
-  user User @relation(fields: [userId],references: [userId])
-  userId Int @default(1)
-  wordTag WordTag? @relation(fields: [wordTagId],references: [wordTagId])
-  wordTagId Int?
-  media AssetLibrary? @relation(fields: [mediaId],references: [mediaId])
-  mediaId Int? @unique
+  wordList WordList? @relation(fields: [wordListId],references: [wordListId])
+  wordListId Int?
+  images AssetLibrary[]
   word String
-  description String
+  definition String
   example String
   level WordLevel?
   partOfSpeech String? @default("")
   isPublic  Boolean @default(false)
-  createdAt String
-  updatedAt String
+  createdAt Int
+  updatedAt Int
 
-  @@unique([word, wordTagId ,userId])
+  @@unique([word, example, definition])
 }
 
-model WordTag{
-  wordTagId Int @id @default(autoincrement())
-  user User @relation(fields: [userId],references: [userId])
-  userId Int @default(1)
+model WordList{
+  wordListId Int @id @default(autoincrement())
+  user User? @relation(fields: [userId],references: [userId])
+  userId Int?
   words Word[]
-  tag String   
+  name String   
   color String @default("")
-  createdAt String
-  updatedAt String
+  updatedAt Int
+  createdAt Int
 
-  @@unique([tag,userId])
+  @@unique([name,userId])
 }
 
 enum UserRole{

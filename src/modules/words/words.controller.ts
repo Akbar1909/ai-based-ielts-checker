@@ -12,6 +12,9 @@ import { WordsService } from './words.service';
 import { CreateWordDto } from './dto/create-word.dto';
 import { UpdateWordDto } from './dto/update-word.dto';
 import { FindAllWordDto, FindAllWordPartialDto } from './dto/find-all-word.dto';
+import { AttachPhotoToWord } from './dto/attach-photo-to-word.dto';
+import { FindManyByWord } from './dto/find-many-by-word.dto';
+import { SaveWordDto } from './dto/save-word.dto';
 
 @Controller('words')
 export class WordsController {
@@ -20,6 +23,21 @@ export class WordsController {
   @Post()
   create(@Body() createWordDto: CreateWordDto) {
     return this.wordsService.create(createWordDto);
+  }
+
+  @Post('/attach-photo-to-word')
+  attachPhotoToWord(@Body() dto: AttachPhotoToWord) {
+    return this.wordsService.attachPhotoToWord(dto);
+  }
+
+  @Post('/save')
+  save(@Body() dto: SaveWordDto) {
+    return this.wordsService.save(dto);
+  }
+
+  @Get('/find-many-by-word')
+  findManyByWord(@Query() query: FindManyByWord) {
+    return this.wordsService.findManyByWord(query);
   }
 
   @Get()

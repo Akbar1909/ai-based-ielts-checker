@@ -1,7 +1,7 @@
-import dayjs, { getCurrentTime } from './time';
+import { getUnixCurrentTime } from './time';
 
 const getAutoFilledModelFields = (create = false): any => {
-  const currentTime = getCurrentTime().toString();
+  const currentTime = getUnixCurrentTime();
   if (create) {
     return {
       createdAt: currentTime,

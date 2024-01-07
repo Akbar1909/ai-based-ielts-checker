@@ -27,4 +27,8 @@ export function getCurrentTime() {
   return dayjs().valueOf();
 }
 
+export function getUnixCurrentTime() {
+  return dayjs().unix();
+}
+
 export default dayjs;

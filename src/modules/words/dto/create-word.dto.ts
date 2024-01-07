@@ -8,7 +8,7 @@ export class CreateWordDto {
 
   @IsString()
   @IsNotEmpty()
-  description: string;
+  definition: string;
 
   @IsString()
   @IsNotEmpty()
@@ -18,7 +18,7 @@ export class CreateWordDto {
   partOfSpeech: string;
 
   @IsNumber()
-  wordTagId?: number;
+  wordListId?: number;
 
   @IsEnum(WordLevelEnum)
   level?: WordLevelEnum;

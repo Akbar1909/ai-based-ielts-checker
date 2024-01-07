@@ -5,7 +5,9 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { getAutoFilledModelFields } from 'src/utils/autoFilledModelProperties';
 import { UploadService } from '../upload/upload.service';
 import { FindAllWordDto, FindAllWordPartialDto } from './dto/find-all-word.dto';
-import { makeItMap } from 'src/utils/makeItMap';
+import { AttachPhotoToWord } from './dto/attach-photo-to-word.dto';
+import { FindManyByWord } from './dto/find-many-by-word.dto';
+import { SaveWordDto } from './dto/save-word.dto';
 
 @Injectable()
 export class WordsService {
@@ -13,6 +15,39 @@ export class WordsService {
     private readonly prisma: PrismaService,
     private readonly uploadService: UploadService,
   ) {}
+
+  async attachPhotoToWord({
+    mediaId,
+    example = '',
+    ...rest
+  }: AttachPhotoToWord) {
+    const record = await this.prisma.word.create({
+      data: {
+        ...rest,
+        example,
+        images: {
+          connect: [{ mediaId: mediaId }],
+        },
+        ...getAutoFilledModelFields(true),
+      },
+    });
+
+    return {
+      status: 'success',
+      data: record,
+    };
+  }
+
+  async save(dto: SaveWordDto) {
+    const record = await this.prisma.word.create({
+      data: { ...dto, ...getAutoFilledModelFields(true) },
+    });
+
+    return {
+      status: 'success',
+      data: record,
+    };
+  }
 
   async create({ dataUrl, aspectRatio, ...createWordDto }: CreateWordDto) {
     const { status, data: media } = await this.uploadService.uploadDataUrl({
@@ -48,10 +83,6 @@ export class WordsService {
 
     const [records, total] = await this.prisma.$transaction([
       this.prisma.word.findMany({
-        include: {
-          wordTag: true,
-          media: { select: { filename: true, aspectRatio: true } },
-        },
         ...config,
       }),
       this.prisma.word.count(),
@@ -71,24 +102,10 @@ export class WordsService {
     };
   }
 
-  async findWordsByWordTagIds({ wordTag }: FindAllWordPartialDto) {
-    if (wordTag?.length === 0) {
-      return {
-        status: 'success',
-        data: [],
-      };
-    }
-
+  async findManyByWord({ word }: FindManyByWord) {
     const records = await this.prisma.word.findMany({
-      where: { wordTagId: { in: wordTag } },
-      include: {
-        media: {
-          select: {
-            aspectRatio: true,
-            filename: true,
-          },
-        },
-      },
+      where: { word },
+      include: { images: { select: { filename: true } } },
     });
 
     return {
@@ -97,36 +114,24 @@ export class WordsService {
     };
   }
 
-  async getCountByTag() {
-    const counts = await this.prisma.word.groupBy({
-      by: ['wordTagId'],
-      _count: true,
-    });
-
-    const keyValue = makeItMap(counts, 'wordTagId');
-
-    const wordTags = await this.prisma.wordTag.findMany({
-      where: {
-        wordTagId: { in: counts.map((count) => count.wordTagId as number) },
-      },
-      select: {
-        color: true,
-        tag: true,
-        wordTagId: true,
-      },
-      orderBy: {
-        tag: 'asc',
-      },
-    });
-
-    const output = wordTags.map((wordTag) => ({
-      ...wordTag,
-      count: keyValue.get(wordTag.wordTagId)._count,
-    }));
+  async findWordsByWordTagIds({ wordTag }: FindAllWordPartialDto) {
+    if (wordTag?.length === 0) {
+      return {
+        status: 'success',
+        data: [],
+      };
+    }
 
     return {
       status: 'success',
-      data: output,
+      data: [],
+    };
+  }
+
+  async getCountByTag() {
+    return {
+      status: 'success',
+      data: [],
     };
   }
 
