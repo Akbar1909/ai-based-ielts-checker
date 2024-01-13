@@ -62,6 +62,9 @@ export class WordsService {
               examples: {
                 create: definition.examples.map((example) => ({
                   example: example.text,
+                  images: {
+                    connect: example.mediaId?.map((id) => ({ mediaId: id })),
+                  },
                   ...getAutoFilledModelFields(true),
                 })),
               },
@@ -114,7 +117,15 @@ export class WordsService {
           select: {
             partOfSpeech: true,
             definition: true,
-            examples: true,
+            examples: {
+              include: {
+                images: {
+                  select: {
+                    filename: true,
+                  },
+                },
+              },
+            },
           },
         },
       },
