@@ -21,8 +21,8 @@ export class WordsController {
   constructor(private readonly wordsService: WordsService) {}
 
   @Post()
-  create(@Body() createWordDto: CreateWordDto) {
-    return this.wordsService.create(createWordDto);
+  create(@Body() dto: { words: CreateWordDto[] }) {
+    return this.wordsService.create(dto);
   }
 
   @Post('/attach-photo-to-word')

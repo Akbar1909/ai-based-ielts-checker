@@ -26,8 +26,8 @@ model User{
 
 model AssetLibrary{
   mediaId Int @id @default(autoincrement())
-  word     Word? @relation(fields: [wordId],references: [wordId])
-  wordId   Int?
+  exampleId Int?
+  example  Example? @relation(fields: [exampleId],references: [exampleId], onDelete: Cascade)
   filename String
   originalName String
   mimetype String
@@ -43,17 +43,35 @@ model Word{
   wordId Int @id @default(autoincrement())
   wordList WordList? @relation(fields: [wordListId],references: [wordListId])
   wordListId Int?
-  images AssetLibrary[]
   word String
-  definition String
-  example String
   level WordLevel?
-  partOfSpeech String? @default("")
-  isPublic  Boolean @default(false)
+  isPublic  Boolean? @default(false)
+  definitions Definition[]
   createdAt Int
   updatedAt Int
 
-  @@unique([word, example, definition])
+  @@unique([word])
+}
+
+model Definition{
+  definitionId Int @id @default(autoincrement())
+  wordId     Int
+  word       Word @relation(fields: [wordId],references: [wordId])
+  definition String
+  partOfSpeech String?
+  examples   Example[]
+  createdAt  Int
+  updatedAt  Int 
+}
+
+model Example{
+  exampleId Int @id @default(autoincrement())
+  example String
+  definitionId Int
+  definition Definition @relation(fields: [definitionId],references: [definitionId])
+  images     AssetLibrary[]
+  createdAt  Int
+  updatedAt  Int 
 }
 
 model WordList{

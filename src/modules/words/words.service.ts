@@ -49,29 +49,33 @@ export class WordsService {
     };
   }
 
-  async create({ dataUrl, aspectRatio, ...createWordDto }: CreateWordDto) {
-    const { status, data: media } = await this.uploadService.uploadDataUrl({
-      dataUrl,
-      aspectRatio,
-    });
+  async create({ words }: { words: CreateWordDto[] }) {
+    const promises = words.map((word) =>
+      this.prisma.word.create({
+        data: {
+          ...word,
+          ...getAutoFilledModelFields(true),
+          definitions: {
+            create: word.definitions.map((definition) => ({
+              ...definition,
+              ...getAutoFilledModelFields(true),
+              examples: {
+                create: definition.examples.map((example) => ({
+                  example: example.text,
+                  ...getAutoFilledModelFields(true),
+                })),
+              },
+            })),
+          },
+        },
+      }),
+    );
 
-    if (status !== 'success') {
-      throw new NotFoundException({
-        status: 'error',
-        message: 'Error occurred in storing the image, Please retry 😊',
-      });
-    }
+    const records = await Promise.all(promises);
 
-    const newRecord = await this.prisma.word.create({
-      data: {
-        ...createWordDto,
-        mediaId: media?.mediaId,
-        ...getAutoFilledModelFields(true),
-      },
-    });
     return {
       status: 'success',
-      data: newRecord,
+      data: records,
     };
   }
 
@@ -103,9 +107,17 @@ export class WordsService {
   }
 
   async findManyByWord({ word }: FindManyByWord) {
-    const records = await this.prisma.word.findMany({
+    const records = await this.prisma.word.findUnique({
       where: { word },
-      include: { images: { select: { filename: true } } },
+      include: {
+        definitions: {
+          select: {
+            partOfSpeech: true,
+            definition: true,
+            examples: true,
+          },
+        },
+      },
     });
 
     return {

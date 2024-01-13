@@ -38,7 +38,7 @@ async function bootstrap() {
 
   const LOCAL_URL = 'http://localhost:3001';
   const DEV_URL = 'http://93.115.18.106:8080';
-  app.enableCors();
+  app.enableCors({});
 
   await app.listen(3000);
 }
