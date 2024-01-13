@@ -41,8 +41,6 @@ model AssetLibrary{
 
 model Word{
   wordId Int @id @default(autoincrement())
-  wordList WordList? @relation(fields: [wordListId],references: [wordListId])
-  wordListId Int?
   word String
   level WordLevel?
   isPublic  Boolean? @default(false)
@@ -56,7 +54,9 @@ model Word{
 model Definition{
   definitionId Int @id @default(autoincrement())
   wordId     Int
-  word       Word @relation(fields: [wordId],references: [wordId])
+  word       Word @relation(fields: [wordId],references: [wordId],onDelete: Cascade)
+  wordListId Int?
+  wordList   WordList? @relation(fields: [wordListId],references: [wordListId],onDelete: SetNull)
   definition String
   partOfSpeech String?
   examples   Example[]
@@ -68,7 +68,7 @@ model Example{
   exampleId Int @id @default(autoincrement())
   example String
   definitionId Int
-  definition Definition @relation(fields: [definitionId],references: [definitionId])
+  definition Definition @relation(fields: [definitionId],references: [definitionId],onDelete: Cascade)
   images     AssetLibrary[]
   createdAt  Int
   updatedAt  Int 
@@ -78,7 +78,7 @@ model WordList{
   wordListId Int @id @default(autoincrement())
   user User? @relation(fields: [userId],references: [userId])
   userId Int?
-  words Word[]
+  definitions Definition[]
   name String   
   color String @default("")
   updatedAt Int
