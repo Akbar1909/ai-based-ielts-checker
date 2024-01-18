@@ -64,8 +64,6 @@ export class UploadService {
       dataUrl.indexOf(';'),
     );
 
-    console.log({ aspectRatio });
-
     const dbEntity = await this.prisma.assetLibrary.create({
       data: {
         filename,

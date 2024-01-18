@@ -137,6 +137,26 @@ export class WordsService {
     };
   }
 
+  async searchWord({ search }: { search: string }) {
+    const records = await this.prisma.word.findMany({
+      where: {
+        word: {
+          startsWith: search,
+          mode: 'insensitive',
+        },
+      },
+      select: {
+        wordId: true,
+        word: true,
+      },
+    });
+
+    return {
+      status: 'success',
+      data: records,
+    };
+  }
+
   async findWordsByWordTagIds({ wordTag }: FindAllWordPartialDto) {
     if (wordTag?.length === 0) {
       return {
@@ -159,11 +179,41 @@ export class WordsService {
   }
 
   async findOne(id: number) {
-    const record = await this.prisma.word.findFirst({ where: { wordId: id } });
-    return {
-      status: 'success',
-      data: record,
-    };
+    console.log({ id });
+    try {
+      const record = await this.prisma.word.findFirst({
+        where: { wordId: id },
+        select: {
+          word: true,
+          wordId: true,
+          definitions: {
+            select: {
+              definitionId: true,
+              definition: true,
+              examples: {
+                select: {
+                  example: true,
+                  exampleId: true,
+                  images: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      console.log(record);
+      return {
+        status: 'success',
+        data: record,
+      };
+    } catch (e) {
+      console.log(e);
+      return {
+        status: 'error',
+        data: null,
+      };
+    }
   }
 
   async update(id: number, updateWordDto: UpdateWordDto) {

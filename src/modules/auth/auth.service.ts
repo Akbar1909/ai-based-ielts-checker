@@ -32,9 +32,9 @@ export class AuthService {
     const user: UserEntity = await this.validateUser(dto.email);
 
     if (!user) {
-      throw new NotFoundException(
-        `User with the provided ${dto.email} does not exist`,
-      );
+      throw new NotFoundException({
+        message: `User with the provided ${dto.email} does not exist`,
+      });
     }
 
     const isMatch = await this.comparePassword(dto.password, user.password);
@@ -62,7 +62,12 @@ export class AuthService {
 
     const hash = await this.generateHash(user.password);
     const newUser = await this.prisma.user.create({
-      data: { ...user, password: hash, ...getAutoFilledModelFields(true) },
+      data: {
+        ...user,
+        password: hash,
+        ...getAutoFilledModelFields(true),
+        phone: '',
+      },
     });
 
     return this.getToken(newUser);

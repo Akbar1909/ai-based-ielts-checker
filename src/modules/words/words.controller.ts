@@ -40,6 +40,11 @@ export class WordsController {
     return this.wordsService.findManyByWord(query);
   }
 
+  @Get('/search')
+  search(@Query() query: { search: string }) {
+    return this.wordsService.searchWord(query);
+  }
+
   @Get()
   findAll(@Query() query: FindAllWordDto) {
     return this.wordsService.findAll(query);
