@@ -5,7 +5,6 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { getAutoFilledModelFields } from 'src/utils/autoFilledModelProperties';
 import { JwtModel } from '../auth/models/jwt.model';
 import { SaveDefinitionToWordList } from './dto/save-definition-to-word-list';
-import { GetWordListWordsDto } from './dto/get-word-list-words.dto';
 
 @Injectable()
 export class WordListService {
@@ -44,33 +43,14 @@ export class WordListService {
     };
   }
 
-  async getWordListWords({
-    wordListId,
-    page = 0,
-    size = 100,
-  }: GetWordListWordsDto) {
-    const records = await this.prisma.wordList.findUnique({
-      where: { wordListId },
-      include: {
-        definitions: {
-          skip: page * size,
-          take: size,
-        },
-      },
-    });
-
-    return {
-      status: 'success',
-      data: records,
-    };
-  }
-
   async findAll() {
     const records = await this.prisma.wordList.findMany();
 
     return {
       status: 'success',
-      data: records,
+      data: {
+        list: records,
+      },
     };
   }
 

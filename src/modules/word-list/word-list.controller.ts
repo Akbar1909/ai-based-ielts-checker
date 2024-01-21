@@ -7,7 +7,6 @@ import {
   Param,
   Delete,
   UseGuards,
-  Query,
 } from '@nestjs/common';
 import { WordListService } from './word-list.service';
 import { CreateWordListDto } from './dto/create-word-list.dto';
@@ -15,7 +14,6 @@ import { UpdateWordListDto } from './dto/update-word-list.dto';
 import { User } from 'src/decorators/user.decorator';
 import { AuthGuard } from 'src/modules/auth/guards/auth.guard';
 import { JwtModel } from '../auth/models/jwt.model';
-import { GetWordListWordsDto } from './dto/get-word-list-words.dto';
 import { SaveDefinitionToWordList } from './dto/save-definition-to-word-list';
 
 @UseGuards(AuthGuard)
@@ -31,11 +29,6 @@ export class WordListController {
   @Get()
   findAll() {
     return this.wordListService.findAll();
-  }
-
-  @Get('/words')
-  findWords(@Query() query: GetWordListWordsDto) {
-    return this.wordListService.getWordListWords(query);
   }
 
   @Post('/save')

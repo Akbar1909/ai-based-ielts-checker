@@ -55,8 +55,7 @@ model Definition{
   definitionId Int @id @default(autoincrement())
   wordId     Int
   word       Word @relation(fields: [wordId],references: [wordId],onDelete: Cascade)
-  wordListId Int?
-  wordList   WordList? @relation(fields: [wordListId],references: [wordListId],onDelete: SetNull)
+  wordLists   WordList[]
   definition String
   partOfSpeech String?
   examples   Example[]

@@ -10,6 +10,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UploadModule } from './modules/upload/upload.module';
 import { WordsModule } from './modules/words/words.module';
 import { WordListModule } from './modules/word-list/word-list.module';
+import { DefinitionsModule } from './modules/definitions/definitions.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { WordListModule } from './modules/word-list/word-list.module';
     }),
     WordsModule,
     WordListModule,
+    DefinitionsModule,
   ],
   providers: [
     {

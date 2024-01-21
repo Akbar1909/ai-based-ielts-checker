@@ -179,7 +179,6 @@ export class WordsService {
   }
 
   async findOne(id: number) {
-    console.log({ id });
     try {
       const record = await this.prisma.word.findFirst({
         where: { wordId: id },
